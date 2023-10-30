@@ -1,11 +1,13 @@
 // Copyright 2023 Danny Nguyen (danny@keeb.io)
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-#include "quantum.h"
+#include QMK_KEYBOARD_H
 
 #ifdef ENCODER_ENABLE
 bool encoder_update_kb(uint8_t index, bool clockwise) {
-    if (!encoder_update_user(index, clockwise)) { return false; }
+    if (!encoder_update_user(index, clockwise)) {
+        return false;
+    }
     if (index == 0) {
         if (clockwise) {
             tap_code(KC_VOLU);
