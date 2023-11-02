@@ -3,7 +3,7 @@
 #include "quantum_keycodes.h"
 #include QMK_KEYBOARD_H
 
-enum custom_layer { MAIN, MAIN_LIN, FN_1, FN_2, SWE, SWE_FN_1, SWE_FN_2 };
+enum custom_layer { MAIN, MAIN_LIN, FN_1, FN_2 };
 
 #define MT_CLEC LCTL_T(KC_ESC)
 #define MT_CLQT RCTL_T(KC_QUOT)
