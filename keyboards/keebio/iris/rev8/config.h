@@ -14,6 +14,7 @@
 #define I2C_DRIVER I2CD2
 #define I2C1_SDA_PIN GP10
 #define I2C1_SCL_PIN GP11
+#define TAPPING_TERM 10
 #define RETRO_TAPPING
 
 // RGB Matrix
