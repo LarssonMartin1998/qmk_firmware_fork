@@ -1,14 +1,19 @@
+#include <stdint.h>
+#include "action_layer.h"
+#include "keyboard.h"
 #include "keycodes.h"
 #include "keymap_us.h"
+#include "pico/types.h"
 #include "quantum_keycodes.h"
+#include "rgb_matrix.h"
 #include QMK_KEYBOARD_H
 
-enum custom_layer { MAIN, MAIN_LIN, FN_1, FN_2 };
+enum custom_layer { MAIN, MAIN_LIN, FN, SYMBOLS, NUM_LAYERS };
 
 #define MT_CLEC LCTL_T(KC_ESC)
 #define MT_CLQT RCTL_T(KC_QUOT)
-#define MO_FN1 MO(FN_1)
-#define MO_FN2 MO(FN_2)
+#define MO_FN MO(FN)
+#define MO_SM MO(SYMBOLS)
 #define TG_LIN TG(MAIN_LIN)
 
 // clang-format off
@@ -23,7 +28,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LALT,          KC_RALT, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_LGUI, MO_FN1,  KC_SPC,                    KC_ENT,  MO_FN2,  KC_RGUI
+                                    KC_LGUI, MO_FN,  KC_SPC,                    KC_ENT,  MO_SM,  KC_RGUI
   ),
 
   [MAIN_LIN] = LAYOUT(
@@ -36,10 +41,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LGUI,          KC_RGUI, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_LALT, MO_FN1,  KC_SPC,                    KC_ENT,  MO_FN2,  KC_RALT
+                                    KC_LALT, MO_FN,  KC_SPC,                    KC_ENT,  MO_SM,  KC_RALT
   ),
 
-  [FN_1] = LAYOUT(
+  [FN] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -53,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
-  [FN_2] = LAYOUT(
+  [SYMBOLS] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -68,3 +73,39 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 // clang-format on
+
+void set_rgb(const uint8_t index) {
+    const uint8_t h[NUM_LAYERS] = {
+        170,
+        170,
+        82,
+        15,
+    };
+    const uint8_t s[NUM_LAYERS] = {
+        124,
+        124,
+        255,
+        255
+    };
+    const uint8_t v[NUM_LAYERS] = {
+        150,
+        150,
+        155,
+        155
+    };
+
+    rgblight_sethsv_noeeprom(h[index], s[index], v[index]);
+}
+
+void keyboard_post_init_user(void) {
+    rgblight_enable_noeeprom();
+    const uint8_t mode_static_lighting = 1;
+    rgblight_mode_noeeprom(mode_static_lighting);
+    set_rgb(0);
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    const uint16_t curr_layer = get_highest_layer(state);
+    set_rgb(curr_layer);
+    return state;
+}
