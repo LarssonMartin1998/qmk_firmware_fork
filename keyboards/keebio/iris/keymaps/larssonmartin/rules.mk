@@ -4,7 +4,7 @@ ENCODER_MAP_ENABLE = no
 
 NKRO_ENABLE = yes           # Enable N-Key Rollover
 BOOTMAGIC_ENABLE = no      # Enable Bootmagic Lite
-MOUSEKEY_ENABLE = no        # Mouse keys
+MOUSEKEY_ENABLE = yes        # Mouse keys
 EXTRAKEY_ENABLE = no       # Audio control and System control
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 RGBLIGHT_ENABLE = no        # Enable keyboard RGB underglow
