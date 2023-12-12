@@ -15,6 +15,7 @@ COMBO_ENABLE = no
 CONSOLE_ENABLE = no
 KEY_OVERRIDE_ENABLE = no
 CAPS_WORD_ENABLE = yes
+LEADER_ENABLE = yes
 
 #SRC += vim_core.c
 #SRC += utils.c
