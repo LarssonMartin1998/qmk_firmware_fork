@@ -16,6 +16,7 @@
 #define I2C1_SCL_PIN GP11
 #define RETRO_TAPPING
 #define TAPPING_TERM 10
+#define LEADER_PER_KEY_TIMING
 #define LEADER_TIMEOUT 350
 
 // RGB Matrix

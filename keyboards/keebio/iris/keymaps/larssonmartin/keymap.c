@@ -7,7 +7,7 @@
 #include "rgb_matrix.h"
 #include QMK_KEYBOARD_H
 
-enum custom_layer { MAC_COLEMAK_DH, MAC_QWERTY, LIN_COLEMAK, LIN_QWERTY, MAIN_LIN, RAISE, LOWER, NUM_LAYERS };
+enum custom_layer { MAC_COLEMAK, MAC_QWERTY, LIN_COLEMAK, LIN_QWERTY, MAIN_LIN, RAISE, LOWER, NUM_LAYERS };
 
 #define MT_CLEC LCTL_T(KC_ESC)
 #define MT_CLTG RCTL_T(CW_TOGG)
@@ -18,10 +18,11 @@ enum custom_layer { MAC_COLEMAK_DH, MAC_QWERTY, LIN_COLEMAK, LIN_QWERTY, MAIN_LI
 #define TG_LIN TG(MAIN_LIN)
 
 uint16_t last_key_pressed = KC_NO;
+bool is_mac = true;
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [MAC_COLEMAK_DH] = LAYOUT(
+  [MAC_COLEMAK] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -107,16 +108,22 @@ void set_rgb(const uint8_t index) {
     const uint8_t h[NUM_LAYERS] = {
         170,
         170,
+        170,
+        170,
         82,
         15,
     };
     const uint8_t s[NUM_LAYERS] = {
         124,
         124,
+        124,
+        124,
         255,
         255
     };
     const uint8_t v[NUM_LAYERS] = {
+        150,
+        150,
         150,
         150,
         155,
@@ -131,6 +138,8 @@ void keyboard_post_init_user(void) {
     const uint8_t mode_static_lighting = 1;
     rgblight_mode_noeeprom(mode_static_lighting);
     set_rgb(0);
+
+    is_mac = true;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -171,11 +180,22 @@ void leader_end_user(void) {
         reset_keyboard();
     } else if (leader_sequence_three_keys(KC_L, KC_M, KC_Q)) {
         default_layer_set(1UL << MAC_QWERTY);
+        is_mac = true;
     } else if (leader_sequence_three_keys(KC_L, KC_M, KC_C)) {
-        default_layer_set(1UL << MAC_COLEMAK_DH);
+        default_layer_set(1UL << MAC_COLEMAK);
+        is_mac = true;
     } else if (leader_sequence_three_keys(KC_L, KC_L, KC_Q)) {
         default_layer_set(1UL << LIN_QWERTY);
+        is_mac = false;
     } else if (leader_sequence_three_keys(KC_L, KC_L, KC_C)) {
         default_layer_set(1UL << LIN_COLEMAK);
+        is_mac = false;
+    } else if (leader_sequence_two_keys(KC_E, KC_L)) {
+        SEND_STRING("larssonmartin1998@gmail.com");
+    } else if (leader_sequence_two_keys(KC_E, KC_Q)) {
+        SEND_STRING("qvantry@gmail.com");
+    } else if (leader_sequence_two_keys(KC_E, KC_W)) {
+        SEND_STRING("martin.larsson@fasttravelgames.com");
     }
+
 }
