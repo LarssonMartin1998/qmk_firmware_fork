@@ -5,9 +5,10 @@
 #include "keymap_us.h"
 #include "quantum_keycodes.h"
 #include "rgb_matrix.h"
+#include "process_combo.h"
 #include QMK_KEYBOARD_H
 
-enum custom_layer { MAC_COLEMAK, MAC_QWERTY, LIN_COLEMAK, LIN_QWERTY, MAIN_LIN, RAISE, LOWER, NUM_LAYERS };
+enum custom_layer { MAC_TARMAK1, LIN_TARMAK1, RAISE, LOWER, NUM_LAYERS };
 
 #define MT_CLEC LCTL_T(KC_ESC)
 #define MT_CLTG RCTL_T(CW_TOGG)
@@ -15,61 +16,46 @@ enum custom_layer { MAC_COLEMAK, MAC_QWERTY, LIN_COLEMAK, LIN_QWERTY, MAIN_LIN, 
 #define MO_RAISE MO(RAISE)
 #define MO_LOWER MO(LOWER)
 
-#define TG_LIN TG(MAIN_LIN)
-
 uint16_t last_key_pressed = KC_NO;
 bool is_mac = true;
 
+enum combo_events {
+    LEFT_OS,
+    RIGHT_OS
+};
+
+const uint16_t PROGMEM CO_LOS[] = { KC_Z, KC_X, COMBO_END };
+const uint16_t PROGMEM CO_ROS[] = { KC_DOT, KC_SLSH, COMBO_END };
+combo_t key_combos[] = {
+    [LEFT_OS] = COMBO_ACTION(CO_LOS),
+    [RIGHT_OS] = COMBO_ACTION(CO_ROS)
+};
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [MAC_COLEMAK] = LAYOUT(
+
+  [MAC_TARMAK1] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
+     KC_TAB,  KC_Q,    KC_W,    KC_J,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     MT_CLEC, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_I,    KC_O,    MT_CLTG,
+     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_SCLN, MT_CLTG,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_LALT,          KC_RALT, KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_NO,            KC_NO, KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_LGUI, MO_RAISE,KC_SPC,                    KC_ENT,  MO_LOWER,KC_RGUI
+                                    KC_LCMD, MO_RAISE,KC_SPC,                    KC_ENT,  MO_LOWER,KC_RCMD
   ),
 
-  [MAC_QWERTY] = LAYOUT(
+  [LIN_TARMAK1] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+     KC_TAB,  KC_Q,    KC_W,    KC_J,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, MT_CLTG,
+     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_SCLN, MT_CLTG,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LALT,          KC_RALT, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-  //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_LGUI, MO_RAISE,KC_SPC,                    KC_ENT,  MO_LOWER,KC_RGUI
-  ),
-
-  [LIN_COLEMAK] = LAYOUT(
-  //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
-  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
-  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     MT_CLEC, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_I,    KC_O,    MT_CLTG,
-  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_LGUI,          KC_RGUI, KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-  //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_LALT, MO_RAISE,KC_SPC,                    KC_ENT,  MO_LOWER,KC_RALT
-  ),
-
-  [LIN_QWERTY] = LAYOUT(
-  //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
-  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
-  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, MT_CLTG,
-  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LGUI,          KC_RGUI, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_NO,            KC_NO, KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     KC_LALT, MO_RAISE,KC_SPC,                    KC_ENT,  MO_LOWER,KC_RALT
   ),
@@ -108,22 +94,16 @@ void set_rgb(const uint8_t index) {
     const uint8_t h[NUM_LAYERS] = {
         170,
         170,
-        170,
-        170,
         82,
         15,
     };
     const uint8_t s[NUM_LAYERS] = {
         124,
         124,
-        124,
-        124,
         255,
         255
     };
     const uint8_t v[NUM_LAYERS] = {
-        150,
-        150,
         150,
         150,
         155,
@@ -178,17 +158,11 @@ void leader_start_user(void) {
 void leader_end_user(void) {
     if (leader_sequence_one_key(KC_B)) {
         reset_keyboard();
-    } else if (leader_sequence_three_keys(KC_L, KC_M, KC_Q)) {
-        default_layer_set(1UL << MAC_QWERTY);
+    } else if (leader_sequence_two_keys(KC_L, KC_M)) {
+        default_layer_set(1UL << MAC_TARMAK1);
         is_mac = true;
-    } else if (leader_sequence_three_keys(KC_L, KC_M, KC_C)) {
-        default_layer_set(1UL << MAC_COLEMAK);
-        is_mac = true;
-    } else if (leader_sequence_three_keys(KC_L, KC_L, KC_Q)) {
-        default_layer_set(1UL << LIN_QWERTY);
-        is_mac = false;
-    } else if (leader_sequence_three_keys(KC_L, KC_L, KC_C)) {
-        default_layer_set(1UL << LIN_COLEMAK);
+    } else if (leader_sequence_two_keys(KC_L, KC_L)) {
+        default_layer_set(1UL << LIN_TARMAK1);
         is_mac = false;
     } else if (leader_sequence_two_keys(KC_E, KC_L)) {
         SEND_STRING("larssonmartin1998@gmail.com");
@@ -197,5 +171,23 @@ void leader_end_user(void) {
     } else if (leader_sequence_two_keys(KC_E, KC_W)) {
         SEND_STRING("martin.larsson@fasttravelgames.com");
     }
-
 }
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+    uint16_t keycode = KC_NO;
+    switch (combo_index) {
+        case LEFT_OS:
+            keycode = is_mac ? KC_LOPT : KC_LWIN;
+        break;
+        case RIGHT_OS:
+            keycode = is_mac ? KC_ROPT : KC_RWIN;
+        break;
+    }
+
+    if (pressed) {
+        register_code(keycode);
+    } else {
+        unregister_code(keycode);
+    }
+}
+
