@@ -8,6 +8,7 @@
 #include "process_combo.h"
 #include QMK_KEYBOARD_H
 
+enum rgb_modes { RGB_DEFAULT, RGB_LEADER_ACTIVE, NUM_RGB_MODES };
 enum custom_layer { MAC_TARMAK1, LIN_TARMAK1, RAISE, LOWER, NUM_LAYERS };
 
 #define MT_CLEC LCTL_T(KC_ESC)
@@ -18,6 +19,7 @@ enum custom_layer { MAC_TARMAK1, LIN_TARMAK1, RAISE, LOWER, NUM_LAYERS };
 
 uint16_t last_key_pressed = KC_NO;
 bool is_mac = true;
+bool is_leader_active = false;
 
 enum combo_events {
     LEFT_OS,
@@ -26,9 +28,11 @@ enum combo_events {
 
 const uint16_t PROGMEM CO_LOS[] = { KC_Z, KC_X, COMBO_END };
 const uint16_t PROGMEM CO_ROS[] = { KC_DOT, KC_SLSH, COMBO_END };
+const uint16_t PROGMEM CO_LEAD[] = { KC_TAB, KC_BSPC, COMBO_END };
 combo_t key_combos[] = {
     [LEFT_OS] = COMBO_ACTION(CO_LOS),
-    [RIGHT_OS] = COMBO_ACTION(CO_ROS)
+    [RIGHT_OS] = COMBO_ACTION(CO_ROS),
+    COMBO(CO_LEAD, QK_LEAD),
 };
 
 // clang-format off
@@ -84,29 +88,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      _______, KC_QUOT, KC_BSLS, KC_MINS, KC_PLUS, _______, _______,          _______, _______, KC_EQL,  KC_UNDS, KC_PIPE, KC_DQUO, _______,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    _______, KC_NO,   QK_LEAD,                   _______, _______, _______
+                                    _______, KC_NO,   _______,                   _______, _______, _______
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   )
 };
 // clang-format on
 
-void set_rgb(const uint8_t index) {
-    const uint8_t h[NUM_LAYERS] = {
+void set_rgb(void) {
+    const uint8_t index = is_leader_active ? RGB_LEADER_ACTIVE : RGB_DEFAULT;
+    const uint8_t h[NUM_RGB_MODES] = {
         170,
-        170,
-        82,
         15,
     };
-    const uint8_t s[NUM_LAYERS] = {
+    const uint8_t s[NUM_RGB_MODES] = {
         124,
-        124,
-        255,
         255
     };
-    const uint8_t v[NUM_LAYERS] = {
+    const uint8_t v[NUM_RGB_MODES] = {
         150,
-        150,
-        155,
         155
     };
 
@@ -117,14 +116,13 @@ void keyboard_post_init_user(void) {
     rgblight_enable_noeeprom();
     const uint8_t mode_static_lighting = 1;
     rgblight_mode_noeeprom(mode_static_lighting);
-    set_rgb(0);
+    set_rgb();
 
     is_mac = true;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    const uint16_t curr_layer = get_highest_layer(state);
-    set_rgb(curr_layer);
+    set_rgb();
     return state;
 }
 
@@ -152,10 +150,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void leader_start_user(void) {
-    // Do something when the leader key is pressed
+    is_leader_active = true;
+
+    set_rgb();
 }
 
 void leader_end_user(void) {
+    is_leader_active = false;
+
     if (leader_sequence_one_key(KC_B)) {
         reset_keyboard();
     } else if (leader_sequence_two_keys(KC_L, KC_M)) {
@@ -171,6 +173,8 @@ void leader_end_user(void) {
     } else if (leader_sequence_two_keys(KC_E, KC_W)) {
         SEND_STRING("martin.larsson@fasttravelgames.com");
     }
+
+    set_rgb();
 }
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
