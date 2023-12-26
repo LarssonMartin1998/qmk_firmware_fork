@@ -8,8 +8,8 @@
 #include "process_combo.h"
 #include QMK_KEYBOARD_H
 
-enum rgb_modes { RGB_DEFAULT, RGB_LEADER_ACTIVE, NUM_RGB_MODES };
-enum custom_layer { MAC_TARMAK1, LIN_TARMAK1, RAISE, LOWER, NUM_LAYERS };
+enum rgb_modes { RGB_MAC, RGB_LIN, RGB_LEADER_ACTIVE, NUM_RGB_MODES };
+enum custom_layer { MAC_TARMAK2, LIN_TARMAK2, RAISE, LOWER, NUM_LAYERS };
 
 #define MT_CLEC LCTL_T(KC_ESC)
 #define MT_CLTG RCTL_T(CW_TOGG)
@@ -22,44 +22,50 @@ bool is_mac = true;
 bool is_leader_active = false;
 
 enum combo_events {
-    LEFT_OS,
-    RIGHT_OS
+    LEFT_OS, // Opt / Super
+    RIGHT_OS, // Opt / Super
+    LEFT_CA, // Cmd / Alt
+    RIGHT_CA, // Cmd / Alt
 };
 
 const uint16_t PROGMEM CO_LOS[] = { KC_Z, KC_X, COMBO_END };
 const uint16_t PROGMEM CO_ROS[] = { KC_DOT, KC_SLSH, COMBO_END };
+const uint16_t PROGMEM CO_LCA[] = { KC_X, KC_C, COMBO_END };
+const uint16_t PROGMEM CO_RCA[] = { KC_COMM, KC_DOT, COMBO_END };
 const uint16_t PROGMEM CO_LEAD[] = { KC_TAB, KC_BSPC, COMBO_END };
 combo_t key_combos[] = {
     [LEFT_OS] = COMBO_ACTION(CO_LOS),
     [RIGHT_OS] = COMBO_ACTION(CO_ROS),
+    [LEFT_CA] = COMBO_ACTION(CO_LCA),
+    [RIGHT_CA] = COMBO_ACTION(CO_RCA),
     COMBO(CO_LEAD, QK_LEAD),
 };
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  [MAC_TARMAK1] = LAYOUT(
+  [MAC_TARMAK2] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_J,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+     KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_R,    KC_B,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_SCLN, MT_CLTG,
+     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_T,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_SCLN, MT_CLTG,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_NO,            KC_NO, KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_J,    KC_V,    KC_NO,            KC_NO,   KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     KC_LCMD, MO_RAISE,KC_SPC,                    KC_ENT,  MO_LOWER,KC_RCMD
   ),
 
-  [LIN_TARMAK1] = LAYOUT(
+  [LIN_TARMAK2] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_J,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+     KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_R,    KC_B,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_SCLN, MT_CLTG,
+     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_T,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_SCLN, MT_CLTG,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_NO,            KC_NO, KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_J,    KC_V,    KC_NO,            KC_NO,   KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     KC_LALT, MO_RAISE,KC_SPC,                    KC_ENT,  MO_LOWER,KC_RALT
   ),
@@ -94,18 +100,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 // clang-format on
 
+uint8_t get_rgb_state(void) {
+    if (is_leader_active) {
+        return RGB_LEADER_ACTIVE;
+    } else if (is_mac) {
+        return RGB_MAC;
+    } else {
+        return RGB_LIN;
+    }
+}
+
 void set_rgb(void) {
-    const uint8_t index = is_leader_active ? RGB_LEADER_ACTIVE : RGB_DEFAULT;
+    const uint8_t index = get_rgb_state();
     const uint8_t h[NUM_RGB_MODES] = {
+        170,
         170,
         15,
     };
     const uint8_t s[NUM_RGB_MODES] = {
-        124,
+        80,
+        160,
         255
     };
     const uint8_t v[NUM_RGB_MODES] = {
-        150,
+        100,
+        170,
         155
     };
 
@@ -158,20 +177,30 @@ void leader_start_user(void) {
 void leader_end_user(void) {
     is_leader_active = false;
 
-    if (leader_sequence_one_key(KC_B)) {
+    // QMK
+    if (leader_sequence_two_keys(KC_Q, KC_B)) {
         reset_keyboard();
+    // Layers
     } else if (leader_sequence_two_keys(KC_L, KC_M)) {
-        default_layer_set(1UL << MAC_TARMAK1);
+        default_layer_set(1UL << MAC_TARMAK2);
         is_mac = true;
     } else if (leader_sequence_two_keys(KC_L, KC_L)) {
-        default_layer_set(1UL << LIN_TARMAK1);
+        default_layer_set(1UL << LIN_TARMAK2);
         is_mac = false;
+    // Emails
     } else if (leader_sequence_two_keys(KC_E, KC_L)) {
         SEND_STRING("larssonmartin1998@gmail.com");
     } else if (leader_sequence_two_keys(KC_E, KC_Q)) {
         SEND_STRING("qvantry@gmail.com");
     } else if (leader_sequence_two_keys(KC_E, KC_W)) {
         SEND_STRING("martin.larsson@fasttravelgames.com");
+    // Media
+    } else if (leader_sequence_two_keys(KC_M, KC_SPC)) {
+        tap_code(KC_MEDIA_PLAY_PAUSE);
+    } else if (leader_sequence_two_keys(KC_M, KC_P)) {
+        tap_code(KC_MEDIA_PREV_TRACK);
+    } else if (leader_sequence_two_keys(KC_M, KC_N)) {
+        tap_code(KC_MEDIA_NEXT_TRACK);
     }
 
     set_rgb();
@@ -185,6 +214,12 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         break;
         case RIGHT_OS:
             keycode = is_mac ? KC_ROPT : KC_RWIN;
+        break;
+        case LEFT_CA:
+            keycode = is_mac ? KC_LCMD : KC_LALT;
+        break;
+        case RIGHT_CA:
+            keycode = is_mac ? KC_RCMD : KC_RALT;
         break;
     }
 
