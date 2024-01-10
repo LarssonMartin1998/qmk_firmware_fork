@@ -9,7 +9,7 @@
 #include QMK_KEYBOARD_H
 
 enum rgb_modes { RGB_MAC, RGB_LIN, RGB_LEADER_ACTIVE, NUM_RGB_MODES };
-enum custom_layer { MAC_TARMAK2, LIN_TARMAK2, RAISE, LOWER, NUM_LAYERS };
+enum custom_layer { MAC_TARMAK4, LIN_TARMAK4, RAISE, LOWER, NUM_LAYERS };
 
 #define MT_CLEC LCTL_T(KC_ESC)
 #define MT_CLTG RCTL_T(CW_TOGG)
@@ -44,28 +44,28 @@ combo_t key_combos[] = {
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  [MAC_TARMAK2] = LAYOUT(
+  [MAC_TARMAK4] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_R,    KC_B,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+     KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    KC_U,    KC_I,    KC_Y,    KC_SCLN, KC_BSPC,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_T,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_SCLN, MT_CLTG,
+     MT_CLEC, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_O,    MT_CLTG,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_J,    KC_V,    KC_NO,            KC_NO,   KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_NO,            KC_NO,   KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     KC_LCMD, MO_RAISE,KC_SPC,                    KC_ENT,  MO_LOWER,KC_RCMD
   ),
 
-  [LIN_TARMAK2] = LAYOUT(
+  [LIN_TARMAK4] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_R,    KC_B,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+     KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                               KC_J,    KC_U,    KC_I,    KC_Y,    KC_SCLN, KC_BSPC,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-     MT_CLEC, KC_A,    KC_S,    KC_D,    KC_T,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_SCLN, MT_CLTG,
+     MT_CLEC, KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                               KC_M,    KC_N,    KC_E,    KC_L,    KC_O,    MT_CLTG,
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_J,    KC_V,    KC_NO,            KC_NO,   KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_NO,            KC_NO,   KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                     KC_LALT, MO_RAISE,KC_SPC,                    KC_ENT,  MO_LOWER,KC_RALT
   ),
@@ -182,10 +182,10 @@ void leader_end_user(void) {
         reset_keyboard();
     // Layers
     } else if (leader_sequence_two_keys(KC_L, KC_M)) {
-        default_layer_set(1UL << MAC_TARMAK2);
+        default_layer_set(1UL << MAC_TARMAK4);
         is_mac = true;
     } else if (leader_sequence_two_keys(KC_L, KC_L)) {
-        default_layer_set(1UL << LIN_TARMAK2);
+        default_layer_set(1UL << LIN_TARMAK4);
         is_mac = false;
     // Emails
     } else if (leader_sequence_two_keys(KC_E, KC_L)) {
