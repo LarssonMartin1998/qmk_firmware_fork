@@ -763,20 +763,20 @@ void process_action(keyrecord_t *record, action_t action) {
                             unregister_code(action.key.code);
                         } else {
                             ac_dprintf("MODS_TAP: No tap: add_mods\n");
-<<<<<<< HEAD
-#    if defined(RETRO_TAPPING) && defined(DUMMY_MOD_NEUTRALIZER_KEYCODE)
-                            // Send a dummy keycode to neutralize flashing modifiers
-                            // if the key was held and then released with no interruptions.
-                            if (retro_tapping_counter == 2) {
-                                neutralize_flashing_modifiers(get_mods());
-                            }
-#    endif
-=======
+// <<<<<<< HEAD
+// #    if defined(RETRO_TAPPING) && defined(DUMMY_MOD_NEUTRALIZER_KEYCODE)
+//                             // Send a dummy keycode to neutralize flashing modifiers
+//                             // if the key was held and then released with no interruptions.
+//                             if (retro_tapping_counter == 2) {
+//                                 neutralize_flashing_modifiers(get_mods());
+//                             }
+// #    endif
+// =======
 #    ifdef BILATERAL_COMBINATIONS
                             // mod-tap release
                             bilateral_combinations_release(action, event, mods);
 #    else
->>>>>>> sunaku/miryoku_bilateral
+// >>>>>>> sunaku/miryoku_bilateral
                             unregister_mods(mods);
 #    endif
                         }
