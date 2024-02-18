@@ -28,9 +28,10 @@ enum custom_layer { MAC_COLEMAK_DH, LIN_COLEMAK_DH, RAISE, LOWER, NUM_LAYERS };
 #define RSE_SPC LT(RAISE, KC_SPC)
 #define LWR_ENT LT(LOWER, KC_ENT)
 
-uint16_t last_key_pressed = KC_NO;
 bool is_mac = true;
 bool is_leader_active = false;
+
+bool is_in_numbers_mode = false;
 
 const uint16_t PROGMEM CO_LEAD[] = { KC_TAB, KC_BSPC, COMBO_END };
 combo_t key_combos[] = {
@@ -138,6 +139,8 @@ void keyboard_post_init_user(void) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     set_rgb();
+    is_in_numbers_mode = false;
+
     return state;
 }
 
@@ -198,4 +201,83 @@ void leader_end_user(void) {
     }
 
     set_rgb();
+}
+
+void try_activate_numbers_mode(uint16_t keycode) {
+    switch (keycode) {
+        case KC_1:
+        case KC_2:
+        case KC_3:
+        case KC_4:
+        case KC_5:
+        case KC_6:
+        case KC_7:
+        case KC_8:
+        case KC_9:
+        case KC_0:
+            is_in_numbers_mode = true;
+            break;
+    }
+}
+
+uint16_t get_converted_keycode(uint16_t keycode) {
+    switch (keycode) {
+        case KC_F8:
+            return KC_COMM;
+        case KC_F9:
+            return KC_DOT;
+        case KC_DEL:
+            return KC_BSPC;
+    }
+
+    return KC_NO;
+}
+
+bool handle_numbers_mode(uint16_t keycode, keyrecord_t *record) {
+    try_activate_numbers_mode(keycode);
+
+    if (!is_in_numbers_mode) {
+        return true;
+    }
+
+    const uint16_t converted_keycode = get_converted_keycode(keycode);
+    if (converted_keycode == KC_NO) {
+        return true;
+    }
+
+    if (record->event.pressed) {
+        register_code(converted_keycode);
+    } else {
+        unregister_code(converted_keycode);
+    }
+
+    return false;
+}
+
+void try_unregister_numbers_mode(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) {
+        return;
+    }
+
+    switch (keycode) {
+        case KC_F8:
+            unregister_code(KC_COMM);
+        break;
+        case KC_F9:
+            unregister_code(KC_DOT);
+        break;
+        case KC_DEL:
+            unregister_code(KC_BSPC);
+        break;
+    }
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    try_unregister_numbers_mode(keycode, record);
+
+    if (layer_state_is(RAISE)) {
+        return handle_numbers_mode(keycode, record);
+    }
+
+    return true;
 }
