@@ -154,10 +154,10 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case SFT_t:
         case SFT_N:
-            return TAPPING_TERM - 15;
+            return TAPPING_TERM - 20;
         case CTL_S:
         case CTL_E:
-            return TAPPING_TERM - 5;
+            return TAPPING_TERM - 105;
         case ALT_A:
         case GUI_A:
         case ALT_O:

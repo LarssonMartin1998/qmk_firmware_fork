@@ -28,7 +28,7 @@
 // Mod-tap
 // #define RETRO_TAPPING
 #define TAPPING_TERM_PER_KEY
-#define TAPPING_TERM 185
+#define TAPPING_TERM 190
 // #define IGNORE_MOD_TAP_INTERRUPT /* for rolling on mod-tap keys */
 #define BILATERAL_COMBINATIONS
 #define BILATERAL_COMBINATIONS_LIMIT_CHORD_TO_N_KEYS 4 /* GUI, Alt, Ctrl, Shift */
