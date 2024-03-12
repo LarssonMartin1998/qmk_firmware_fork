@@ -25,8 +25,8 @@ enum custom_layer { MAC_COLEMAK_DH, LIN_COLEMAK_DH, RAISE, LOWER, NUM_LAYERS };
 #define ALT_O RALT_T(KC_O)
 #define GUI_O RGUI_T(KC_O)
 
-#define RSE_SPC LT(RAISE, KC_SPC)
-#define LWR_ENT LT(LOWER, KC_ENT)
+#define RSE_TAB LT(RAISE, KC_TAB)
+#define LWR_BSPC LT(LOWER, KC_BSPC)
 
 bool is_mac = true;
 bool is_leader_active = false;
@@ -51,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_NO,   KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_NO,            KC_NO,   KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_NO,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_NO,   KC_TAB,  RSE_SPC,                   LWR_ENT, KC_BSPC,  KC_NO
+                                    KC_NO,   RSE_TAB, KC_SPC,                    KC_ENT,  LWR_BSPC,KC_NO
   ),
 
   [LIN_COLEMAK_DH] = LAYOUT(
@@ -64,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
      KC_NO,   KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_NO,            KC_NO,   KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_NO,
   //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                    KC_NO,   KC_TAB,  RSE_SPC,                   LWR_ENT, KC_BSPC, KC_NO
+                                    KC_NO,   RSE_TAB, KC_SPC,                    KC_ENT,  LWR_BSPC,KC_NO
   ),
 
   [RAISE] = LAYOUT(
