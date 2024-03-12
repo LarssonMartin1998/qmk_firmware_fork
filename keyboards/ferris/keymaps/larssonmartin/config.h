@@ -1,21 +1,13 @@
-/*
-Copyright 2020 Pierre Chevalier <pierrechevalier83@gmail.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// Copyright 2018-2020
+// ENDO Katsuhiro <ka2hiro@curlybracket.co.jp>
+// David Philip Barr <@davidphilipbarr>
+// Pierre Chevalier <pierrechevalier83@gmail.com>
+// SPDX-License-Identifier: GPL-2.0+
 
 #pragma once
+
+#define DEBUG_MATRIX_SCAN_RATE
+
 // Set the mouse settings to a comfortable speed/accuracy trade-off,
 // assuming a screen refresh rate of 60 Htz or higher
 // The default is 50. This makes the mouse ~3 times faster and more accurate
@@ -31,11 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MOUSEKEY_WHEEL_INTERVAL 50
 // The default is 40
 #define MOUSEKEY_WHEEL_TIME_TO_MAX 100
-
-// Pick good defaults for enabling homerow modifiers
-// #define TAPPING_TERM 200
-#define PERMISSIVE_HOLD
-#define QUICK_TAP_TERM 0
 
 // Underglow configuration
 #ifdef RGBLIGHT_ENABLE
@@ -53,3 +40,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGBLIGHT_SAT_STEP 8
 #    define RGBLIGHT_VAL_STEP 8
 #endif
+
+// #define LEADER_PER_KEY_TIMING
+#define LEADER_TIMEOUT 300
+#define COMBO_STRICT_COMBO
+#define COMBO_TERM 50
+
+// Mod-tap
+// #define RETRO_TAPPING
+#define TAPPING_TERM_PER_KEY
+#define TAPPING_TERM 190
+// #define IGNORE_MOD_TAP_INTERRUPT /* for rolling on mod-tap keys */
+#define BILATERAL_COMBINATIONS
+#define BILATERAL_COMBINATIONS_LIMIT_CHORD_TO_N_KEYS 4 /* GUI, Alt, Ctrl, Shift */
+#define BILATERAL_COMBINATIONS_DELAY_MODS_THAT_MATCH MOD_MASK_GUI
+#define BILATERAL_COMBINATIONS_DELAY_MATCHED_MODS_BY 120  /* ms */
+#define BILATERAL_COMBINATIONS_ALLOW_CROSSOVER_AFTER 80   /* ms */
+#define BILATERAL_COMBINATIONS_ALLOW_SAMESIDED_AFTER 3000 /* ms */
+#define BILATERAL_COMBINATIONS_TYPING_STREAK_TIMEOUT 150 /* ms */
+#define BILATERAL_COMBINATIONS_TYPING_STREAK_MODMASK (~MOD_MASK_SHIFT)
+
