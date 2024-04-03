@@ -25,32 +25,32 @@ enum custom_layer { MAC_COLEMAK_DH, LIN_COLEMAK_DH, RAISE, LOWER, NUM_LAYERS };
 #define ALT_O RALT_T(KC_O)
 #define GUI_O RGUI_T(KC_O)
 
-#define RSE_SPC LT(RAISE, KC_SPC)
-#define LWR_ENT LT(LOWER, KC_ENT)
+#define RSE_TAB LT(RAISE, KC_TAB)
+#define LWR_BSPC LT(LOWER, KC_BSPC)
 
 bool is_mac = true;
 bool is_leader_active = false;
 
 bool is_in_numbers_mode = false;
 
-const uint16_t PROGMEM CO_LEAD[] = { KC_TAB, KC_BSPC, COMBO_END };
+const uint16_t PROGMEM CO_LEAD[] = { KC_Z, KC_SLSH, COMBO_END };
 combo_t key_combos[] = {
     COMBO(CO_LEAD, QK_LEAD),
 };
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-	[MAC_COLEMAK_DH] = LAYOUT(
+	[LIN_COLEMAK_DH] = LAYOUT(
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,       KC_J,    KC_L,    KC_U,    KC_Y,     KC_SCLN,
         ALT_A,   GUI_R,   CTL_S,   SFT_t,   KC_G,       KC_M,    SFT_N,   CTL_E,   GUI_I,    ALT_O,
         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,       KC_K,    KC_H,    KC_COMM, KC_DOT,   KC_SLSH,
-                                   KC_TAB,  RSE_SPC,    LWR_ENT, KC_BSPC
+                                   RSE_TAB, KC_SPC,     KC_ENT,  LWR_BSPC
     ),
-	[LIN_COLEMAK_DH] = LAYOUT(
+	[MAC_COLEMAK_DH] = LAYOUT(
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,       KC_J,    KC_L,    KC_U,    KC_Y,     KC_SCLN,
         GUI_A,   ALT_R,   CTL_S,   SFT_t,   KC_G,       KC_M,    SFT_N,   CTL_E,   ALT_I,    GUI_O,
         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,       KC_K,    KC_H,    KC_COMM, KC_DOT,   KC_SLSH,
-                                   KC_TAB,  RSE_SPC,    LWR_ENT, KC_BSPC
+                                   RSE_TAB, KC_SPC,     KC_ENT,  LWR_BSPC
     ),
 	[RAISE] = LAYOUT(
         KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,     KC_0,
