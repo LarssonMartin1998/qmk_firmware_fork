@@ -33,7 +33,7 @@ bool is_leader_active = false;
 
 bool is_in_numbers_mode = false;
 
-const uint16_t PROGMEM CO_LEAD[] = { KC_TAB, KC_BSPC, COMBO_END };
+const uint16_t PROGMEM CO_LEAD[] = { KC_Z, KC_SLSH, COMBO_END };
 combo_t key_combos[] = {
     COMBO(CO_LEAD, QK_LEAD),
 };
@@ -41,7 +41,7 @@ combo_t key_combos[] = {
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  [MAC_COLEMAK_DH] = LAYOUT(
+  [LIN_COLEMAK_DH] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,                              KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                     KC_NO,   RSE_TAB, KC_SPC,                    KC_ENT,  LWR_BSPC,KC_NO
   ),
 
-  [LIN_COLEMAK_DH] = LAYOUT(
+  [MAC_COLEMAK_DH] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
      KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,                              KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
