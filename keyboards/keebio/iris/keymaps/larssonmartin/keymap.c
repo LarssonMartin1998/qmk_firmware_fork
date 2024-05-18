@@ -214,7 +214,7 @@ void leader_end_user(void) {
     } else if (leader_sequence_two_keys(KC_L, KC_M)) {
         set_operating_system(MAC_COLEMAK_DH, UNICODE_MODE_MACOS);
     } else if (leader_sequence_two_keys(KC_L, KC_W)) {
-        set_operating_system(MAC_COLEMAK_DH, UNICODE_MODE_WINCOMPOSE);
+        set_operating_system(WIN_COLEMAK_DH, UNICODE_MODE_WINCOMPOSE);
     } else if (leader_sequence_two_keys(KC_L, KC_G)) {
         default_layer_set(1UL << GAMING);
         // Emails
