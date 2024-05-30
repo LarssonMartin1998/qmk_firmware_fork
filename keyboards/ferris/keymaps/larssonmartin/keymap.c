@@ -1,4 +1,3 @@
-
 #include <stdint.h>
 #include "action_layer.h"
 #include "keyboard.h"
@@ -6,10 +5,16 @@
 #include "keymap_us.h"
 #include "quantum_keycodes.h"
 #include "process_combo.h"
+#include "unicode/unicode.h"
 #include QMK_KEYBOARD_H
 
-enum rgb_modes { RGB_MAC, RGB_LIN, RGB_LEADER_ACTIVE, NUM_RGB_MODES };
-enum custom_layer { MAC_COLEMAK_DH, LIN_COLEMAK_DH, RAISE, LOWER, NUM_LAYERS };
+enum custom_keycodes {
+    UC_AA = SAFE_RANGE,
+    UC_AE,
+    UC_OE,
+};
+
+enum custom_layer { LIN_COLEMAK_DH, MAC_COLEMAK_DH, WIN_COLEMAK_DH, RAISE, LOWER, GAMING, NUM_LAYERS };
 
 #define GUI_A LGUI_T(KC_A)
 #define ALT_A LALT_T(KC_A)
@@ -28,14 +33,21 @@ enum custom_layer { MAC_COLEMAK_DH, LIN_COLEMAK_DH, RAISE, LOWER, NUM_LAYERS };
 #define RSE_TAB LT(RAISE, KC_TAB)
 #define LWR_BSPC LT(LOWER, KC_BSPC)
 
-bool is_mac = true;
-bool is_leader_active = false;
+enum custom_layer current_base_layer = LIN_COLEMAK_DH;
+bool              is_leader_active   = false;
 
 bool is_in_numbers_mode = false;
 
-const uint16_t PROGMEM CO_LEAD[] = { KC_Z, KC_SLSH, COMBO_END };
+const uint16_t PROGMEM CO_LEAD[] = {KC_Z, KC_SLSH, COMBO_END};
+const uint16_t PROGMEM CO_AA[]   = {KC_Q, KC_W, COMBO_END};
+const uint16_t PROGMEM CO_AE[]   = {KC_Z, KC_X, COMBO_END};
+const uint16_t PROGMEM CO_OE[]   = {KC_Y, KC_SCLN, COMBO_END};
+
 combo_t key_combos[] = {
     COMBO(CO_LEAD, QK_LEAD),
+    COMBO(CO_AA, UC_AA),
+    COMBO(CO_AE, UC_AE),
+    COMBO(CO_OE, UC_OE),
 };
 
 // clang-format off
@@ -46,9 +58,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,       KC_K,    KC_H,    KC_COMM, KC_DOT,   KC_SLSH,
                                    RSE_TAB, KC_SPC,     KC_ENT,  LWR_BSPC
     ),
-	[MAC_COLEMAK_DH] = LAYOUT(
+    [MAC_COLEMAK_DH] = LAYOUT(
         KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,       KC_J,    KC_L,    KC_U,    KC_Y,     KC_SCLN,
         GUI_A,   ALT_R,   CTL_S,   SFT_t,   KC_G,       KC_M,    SFT_N,   CTL_E,   ALT_I,    GUI_O,
+        KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,       KC_K,    KC_H,    KC_COMM, KC_DOT,   KC_SLSH,
+                                   RSE_TAB, KC_SPC,     KC_ENT,  LWR_BSPC
+    ),
+    [GAMING] = LAYOUT(
+        KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,       KC_J,    KC_L,    KC_U,    KC_Y,     KC_SCLN,
+        KC_A,    KC_R,    KC_S,    KC_T,    KC_G,       KC_M,    KC_N,    KC_E,    KC_I,     KC_O,
         KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,       KC_K,    KC_H,    KC_COMM, KC_DOT,   KC_SLSH,
                                    RSE_TAB, KC_SPC,     KC_ENT,  LWR_BSPC
     ),
@@ -68,23 +86,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 // clang-format on
 
-uint8_t get_rgb_state(void) {
-    if (is_leader_active) {
-        return RGB_LEADER_ACTIVE;
-    } else if (is_mac) {
-        return RGB_MAC;
-    } else {
-        return RGB_LIN;
-    }
+void set_operating_system(enum custom_layer layer, uint8_t unicode_input_mode) {
+    default_layer_set(1UL << layer);
+    current_base_layer = layer;
+    set_unicode_input_mode(unicode_input_mode);
 }
 
 void keyboard_post_init_user(void) {
-    is_mac = true;
+    set_operating_system(LIN_COLEMAK_DH, UNICODE_MODE_LINUX);
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     is_in_numbers_mode = false;
-
     return state;
 }
 
@@ -116,28 +129,30 @@ void leader_end_user(void) {
     // QMK
     if (leader_sequence_two_keys(KC_Q, KC_B)) {
         reset_keyboard();
-    // Layers
-    } else if (leader_sequence_two_keys(KC_L, KC_M)) {
-        default_layer_set(1UL << MAC_COLEMAK_DH);
-        is_mac = true;
+        // Layers
     } else if (leader_sequence_two_keys(KC_L, KC_L)) {
-        default_layer_set(1UL << LIN_COLEMAK_DH);
-        is_mac = false;
-    // Emails
+        set_operating_system(LIN_COLEMAK_DH, UNICODE_MODE_LINUX);
+    } else if (leader_sequence_two_keys(KC_L, KC_M)) {
+        set_operating_system(MAC_COLEMAK_DH, UNICODE_MODE_MACOS);
+    } else if (leader_sequence_two_keys(KC_L, KC_W)) {
+        set_operating_system(WIN_COLEMAK_DH, UNICODE_MODE_WINCOMPOSE);
+    } else if (leader_sequence_two_keys(KC_L, KC_G)) {
+        default_layer_set(1UL << GAMING);
+        // Emails
     } else if (leader_sequence_two_keys(KC_E, KC_L)) {
         SEND_STRING("larssonmartin1998@gmail.com");
     } else if (leader_sequence_two_keys(KC_E, KC_Q)) {
         SEND_STRING("qvantry@gmail.com");
     } else if (leader_sequence_two_keys(KC_E, KC_W)) {
         SEND_STRING("martin.larsson@fasttravelgames.com");
-    // Media
+        // Media
     } else if (leader_sequence_two_keys(KC_M, KC_SPC)) {
         tap_code(KC_MEDIA_PLAY_PAUSE);
     } else if (leader_sequence_two_keys(KC_M, KC_P)) {
         tap_code(KC_MEDIA_PREV_TRACK);
     } else if (leader_sequence_two_keys(KC_M, KC_N)) {
         tap_code(KC_MEDIA_NEXT_TRACK);
-    // Typing
+        // Typing
     } else if (leader_sequence_one_key(KC_C)) {
         caps_word_toggle();
     }
@@ -194,6 +209,38 @@ bool handle_numbers_mode(uint16_t keycode, keyrecord_t *record) {
     return false;
 }
 
+bool is_shift_held(void) {
+    return (get_mods() & MOD_MASK_SHIFT) != 0;
+}
+
+void register_unicode_letter(uint16_t lower, uint16_t upper) {
+    if (is_shift_held()) {
+        register_unicode(upper);
+    } else {
+        register_unicode(lower);
+    }
+}
+
+bool handle_swedish_unicode_chars(uint16_t keycode, keyrecord_t *record) {
+    if (!record->event.pressed) {
+        return true;
+    }
+
+    switch (keycode) {
+        case UC_AA:
+            register_unicode_letter(0x00E5, 0x00C5);
+            return false;
+        case UC_AE:
+            register_unicode_letter(0x00E4, 0x00C4);
+            return false;
+        case UC_OE:
+            register_unicode_letter(0x00F6, 0x00D6);
+            return false;
+        default:
+            return true;
+    }
+}
+
 void try_unregister_numbers_mode(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         return;
@@ -202,13 +249,13 @@ void try_unregister_numbers_mode(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case KC_F8:
             unregister_code(KC_COMM);
-        break;
+            break;
         case KC_F9:
             unregister_code(KC_DOT);
-        break;
+            break;
         case KC_DEL:
             unregister_code(KC_BSPC);
-        break;
+            break;
     }
 }
 
@@ -219,5 +266,5 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return handle_numbers_mode(keycode, record);
     }
 
-    return true;
+    return handle_swedish_unicode_chars(keycode, record);
 }
